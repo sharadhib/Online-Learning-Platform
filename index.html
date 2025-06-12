@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Online Learning Platform</title>
+<!-- Google Fonts: Inter for modern clean typography -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+  body {
+    margin: 0;
+    background: #fffefe;
+    color: #e1e6f1;
+    font-family: "Inter", sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  a {
+    color: #5ac8fa;
+    text-decoration: none;
+  }
+  a:hover,
+  a:focus {
+    text-decoration: underline;
+    outline: none;
+  }
+
+  /* Focus outlines for accessibility */
+  :focus-visible {
+    outline: 3px solid #5ac8fa;
+    outline-offset: 2px;
+  }
+
+  /* Container */
+  .container {
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.25rem; /* 20px */
+    padding-right: 1.25rem;
+  }
+
+  /* HEADER */
+
+  header {
+    background: #112a53;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+  }
+
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+
+  .logo {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #ffffff;
+    user-select: none;
+  }
+
+  nav.desktop-nav {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  nav.desktop-nav a {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #d0e3ff;
+    padding: 0.5rem 0;
+    position: relative;
+  }
+
+  nav.desktop-nav a:focus,
+  nav.desktop-nav a:hover {
+    color: #75baff;
+  }
+
+  nav.desktop-nav a[aria-current="page"]::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #4faaff 0%, #91d8ff 100%);
+    border-radius: 2px 2px 0 0;
+  }
+
+  /* Mobile menu toggle button */
+  .mobile-menu-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #75baff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+  }
+  .mobile-menu-button:focus-visible {
+    outline-offset: 2px;
+  }
+  .mobile-menu-button svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Mobile nav */
+  nav.mobile-nav {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #112a53;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+  }
+  nav.mobile-nav.open {
+    transform: translateX(0);
+  }
+  nav.mobile-nav a {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #d0e3ff;
+  }
+  nav.mobile-nav a:focus,
+  nav.mobile-nav a:hover {
+    color: #75baff;
+  }
+
+  /* MAIN CONTENT */
+
+  main {
+    flex-grow: 1;
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+  }
+  section {
+    background: rgba(17, 42, 83, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    padding: 2rem;
+    margin-bottom: 3rem;
+  }
+  section h2 {
+    font-weight: 700;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+    color: #a8caff;
+  }
+  section p {
+    font-size: 1rem;
+    color: #d0d6ea;
+  }
+
+  /* FORM CONTROLS */
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    max-width: 320px;
+    padding: 0.625rem 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: 1.5px solid #4169e1;
+    background-color: #142c55;
+    color: #e1e6f1;
+    font-size: 1rem;
+    transition: border-color 0.25s ease;
+  }
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    outline: none;
+    border-color: #75baff;
+    box-shadow: 0 0 8px #75baff;
+  }
+
+  button {
+    background: linear-gradient(135deg, #3a8dde, #75baff);
+    color: #0f1c2f;
+    padding: 0.75rem 1.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-width: 120px;
+  }
+  button:hover,
+  button:focus-visible {
+    box-shadow: 0 6px 12px rgba(117, 186, 255, 0.75);
+    outline-offset: 2px;
+    transform: scale(1.05);
+  }
+  button:active {
+    transform: scale(0.98);
+  }
+
+  /* VIDEO */
+
+  .video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    padding-top: 25px;
+    height: 0;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.6);
+  }
+  .video-container iframe,
+  .video-container video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* QUIZ */
+
+  .quiz-question {
+    font-weight: 600;
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+    color: #aac9ff;
+  }
+  .quiz-feedback {
+    margin-top: 1rem;
+    font-weight: 700;
+  }
+  .quiz-feedback.correct {
+    color: #4ce88b;
+  }
+  .quiz-feedback.incorrect {
+    color: #f75c4c;
+  }
+
+  /* PROGRESS */
+
+  .progress-display {
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: #75baff;
+  }
+
+  /* HELP & CONTACT */
+
+  /* Responsive typography for smaller screens */
+  @media (max-width: 640px) {
+    .header-container {
+      height: 56px;
+      padding: 0 1rem;
+    }
+    nav.desktop-nav {
+      display: none;
+    }
+    section {
+      padding: 1.5rem 1rem;
+    }
+  }
+
+  /* Tablet */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .header-container {
+      max-width: 720px;
+      padding: 0 1rem;
+    }
+    main {
+      padding-top: 2rem;
+      padding-bottom: 3rem;
+    }
+  }
+
+  /* Show desktop nav on large */
+  @media (min-width: 641px) {
+    nav.mobile-nav.open {
+      display: none;
+    }
+    .mobile-menu-button {
+      display: none;
+    }
+    nav.desktop-nav {
+      display: flex;
+    }
+  }
+
+  /* Smooth transitions */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Reduce motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* FOOTER */
+
+  footer {
+    background-color: #112a53;
+    color: #a8caff;
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+    font-size: 0.9rem;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  /* Accessibility Helpers */
+  .sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+</style>
+</head>
+<body>
+
+<header role="banner">
+  <div class="header-container container">
+    <a href="#home" class="logo" aria-label="CodTech Learning Platform Home">CodTech</a>
+    <nav role="navigation" class="desktop-nav" aria-label="Primary navigation">
+      <a href="#home" aria-current="page">Home</a>
+      <a href="#login">Login</a>
+      <a href="#videos">Videos</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#progress">Progress</a>
+      <a href="#help">Help</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="mobile-menu-button" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="#75baff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <nav role="navigation" class="mobile-nav" id="mobile-menu" aria-label="Mobile navigation">
+    <a href="#home" tabindex="-1">Home</a>
+    <a href="#login" tabindex="-1">Login</a>
+    <a href="#videos" tabindex="-1">Videos</a>
+    <a href="#quiz" tabindex="-1">Quiz</a>
+    <a href="#progress" tabindex="-1">Progress</a>
+    <a href="#help" tabindex="-1">Help</a>
+    <a href="#contact" tabindex="-1">Contact</a>
+  </nav>
+</header>
+
+<main class="container" id="main-content" tabindex="-1">
+  <section id="home" tabindex="0" aria-labelledby="home-title" role="region">
+    <h2 id="home-title">Welcome to the CodTech Online Learning Platform</h2>
+    <p>Start learning with video lessons, quizzes, and track your progress easily!</p>
+  </section>
+
+  <section id="login" tabindex="0" aria-labelledby="login-title" role="region" aria-live="polite">
+    <h2 id="login-title">Login</h2>
+    <form id="login-form" onsubmit="return false;" aria-describedby="login-status" autocomplete="off">
+      <label for="email">Email:</label><br />
+      <input type="email" id="email" name="email" placeholder="Email" required aria-required="true" autocomplete="username" />
+      <br />
+      <label for="password">Password:</label><br />
+      <input type="password" id="password" name="password" placeholder="Password" required aria-required="true" autocomplete="current-password" />
+      <br />
+      <button type="submit" id="login-button">Login</button>
+      <p id="login-status" role="status" aria-live="polite" style="margin-top:0.5rem; min-height:1.5em;"></p>
+    </form>
+  </section>
+
+  <section id="videos" tabindex="0" aria-labelledby="videos-title" role="region">
+    <h2 id="videos-title">Video Lessons</h2>
+    <div class="video-container" tabindex="0" aria-label="Sample video lesson">
+      <iframe src="https://www.youtube.com/embed/fWjsdhR3z3c" title="Sample Video Lesson: Coding Tutorial" frameborder="0" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </section>
+
+  <section id="quiz" tabindex="0" aria-labelledby="quiz-title" role="region">
+    <h2 id="quiz-title">Quiz</h2>
+    <form id="quiz-form" aria-describedby="quiz-result" autocomplete="off">
+      <p class="quiz-question" id="quiz-question"></p>
+      <label for="quiz-answer" class="sr-only">Quiz answer</label>
+      <input type="text" id="quiz-answer" name="quiz-answer" placeholder="Your Answer" required aria-required="true" />
+      <button type="submit" id="submit-quiz">Submit</button>
+      <p id="quiz-result" role="alert" aria-live="assertive" class="quiz-feedback" style="min-height:1.5em;"></p>
+    </form>
+    <p id="quiz-progress" aria-live="polite" style="margin-top:0.5rem;"></p>
+  </section>
+
+  <section id="progress" tabindex="0" aria-labelledby="progress-title" role="region">
+    <h2 id="progress-title">Progress Tracker</h2>
+    <p class="progress-display" id="progress-display">Videos Watched: 0 | Quiz Correct: 0</p>
+  </section>
+
+  <section id="help" tabindex="0" aria-labelledby="help-title" role="region">
+    <h2 id="help-title">Help</h2>
+    <p>If you're having trouble accessing lessons, quizzes, or your progress, please ensure you're logged in.</p>
+    <p>Still facing issues? Clear your browser cache or try another browser.</p>
+  </section>
+
+  <section id="contact" tabindex="0" aria-labelledby="contact-title" role="region">
+    <h2 id="contact-title">Contact Us</h2>
+    <p>Email: <a href="mailto:support@codtech.com">support@codtech.com</a></p>
+    <p>Phone: <a href="tel:+919876543210">+91-9876543210</a></p>
+    <p>Working Hours: 10AM – 6PM (Mon–Fri)</p>
+  </section>
+</main>
+
+<footer role="contentinfo">
+  <p>&copy; 2025 CodTech. All rights reserved.</p>
+</footer>
+
+<script>
+  (() => {
+    "use strict";
+
+    const mobileMenuButton = document.querySelector(".mobile-menu-button");
+    const mobileNav = document.getElementById("mobile-menu");
+    const loginForm = document.getElementById("login-form");
+    const loginStatus = document.getElementById("login-status");
+    const quizForm = document.getElementById("quiz-form");
+    const quizResult = document.getElementById("quiz-result");
+    const quizQuestionEl = document.getElementById("quiz-question");
+    const quizAnswerInput = document.getElementById("quiz-answer");
+    const quizProgressEl = document.getElementById("quiz-progress");
+    const progressDisplay = document.getElementById("progress-display");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+
+    // Declare navigation links and sections only once
+    const desktopNavLinks = document.querySelectorAll("nav.desktop-nav a");
+    const mobileNavLinks = document.querySelectorAll("nav.mobile-nav a");
+    const sections = document.querySelectorAll("main section[id]");
+
+    let quizQuestions = [
+  {
+    question: "What keyword is used to define a function in Python?",
+    options: ["def", "function", "define", "fun"],
+    answer: "def"
+  },
+  {
+    question: "What symbol is used to comment a single line in Python?",
+    options: ["//", "#", "--", "/*"],
+    answer: "#"
+  },
+  {
+    question: "What is the data type of the value True?",
+    options: ["bool", "int", "str", "float"],
+    answer: "bool"
+  },
+  {
+    question: "Which built-in function returns the length of a string or list?",
+    options: ["size", "len", "count", "length"],
+    answer: "len"
+  },
+  {
+    question: "What is the result of type(5.0)?",
+    options: ["int", "str", "float", "double"],
+    answer: "float"
+  },
+  {
+    question: "Which operator is used for exponentiation in Python?",
+    options: ["^", "**", "exp", "pow"],
+    answer: "**"
+  },
+  {
+    question: "What data structure stores key-value pairs?",
+    options: ["list", "tuple", "dictionary", "set"],
+    answer: "dictionary"
+  },
+  {
+    question: "Which keyword starts a loop that runs while a condition is true?",
+    options: ["for", "loop", "while", "repeat"],
+    answer: "while"
+  },
+  {
+    question: "What keyword is used to handle exceptions in Python?",
+    options: ["catch", "except", "try", "handle"],
+    answer: "try"
+  },
+  {
+    question: "What is the result of bool(0)?",
+    options: ["true", "1", "false", "none"],
+    answer: "false"
+  }
+];
+
+
+    let quizScore = 0;
+    let currentQuestionIndex = 0;
+    let videosWatched = parseInt(localStorage.getItem("videosWatched"), 10) || 0;
+    let loggedIn = localStorage.getItem("loggedIn") === "true";
+
+    // Update login UI feedback
+    function updateLoginStatus(message, success=true) {
+      loginStatus.textContent = message;
+      loginStatus.style.color = success ? "#4ce88b" : "#f75c4c";
+    }
+
+    // Update progress display UI
+    function updateProgressDisplay() {
+      progressDisplay.textContent = `Videos Watched: ${videosWatched} | Quiz Correct: ${quizScore}`;
+    }
+
+    // Save progress in localStorage
+    function saveProgress() {
+      localStorage.setItem("videosWatched", videosWatched);
+      localStorage.setItem("quizScore", quizScore);
+    }
+
+    // Render current quiz question
+    function renderQuestion() {
+      const current = quizQuestions[currentQuestionIndex];
+      quizQuestionEl.textContent = current.question;
+      quizAnswerInput.value = "";
+      quizResult.textContent = "";
+      quizProgressEl.textContent = `Question ${currentQuestionIndex + 1} of ${quizQuestions.length}`;
+      quizAnswerInput.focus();
+    }
+
+    // Start quiz
+    function startQuiz() {
+      quizScore = 0;
+      currentQuestionIndex = 0;
+      renderQuestion();
+    }
+
+    // Handle login
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      if (email === "" || password === "") {
+        updateLoginStatus("Please enter both email and password.", false);
+        return;
+      }
+
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        updateLoginStatus("Please enter a valid email address.", false);
+        return;
+      }
+
+      localStorage.setItem("loggedIn", "true");
+      loggedIn = true;
+      updateLoginStatus("Login successful!");
+      loginForm.reset();
+      document.getElementById("main-content").focus();
+    });
+
+    // Handle quiz form submission
+    quizForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!loggedIn) {
+        quizResult.textContent = "Please login to submit quiz answers.";
+        quizResult.className = "quiz-feedback incorrect";
+        return;
+      }
+      const userAnswer = quizAnswerInput.value.trim().toLowerCase();
+      const correctAnswer = quizQuestions[currentQuestionIndex].answer.toLowerCase();
+
+      if (userAnswer === correctAnswer) {
+        quizResult.textContent = "Correct!";
+        quizResult.className = "quiz-feedback correct";
+        quizScore++;
+      } else {
+        quizResult.textContent = `Incorrect. The correct answer was: "${correctAnswer}".`;
+        quizResult.className = "quiz-feedback incorrect";
+      }
+      currentQuestionIndex++;
+
+      if (currentQuestionIndex < quizQuestions.length) {
+        setTimeout(() => {
+          renderQuestion();
+        }, 1500);
+      } else {
+        setTimeout(() => {
+          quizQuestionEl.textContent = `Quiz complete! Your score: ${quizScore} / ${quizQuestions.length}`;
+          quizAnswerInput.style.display = "none";
+          quizForm.querySelector("button").style.display = "none";
+          quizProgressEl.textContent = "";
+          quizResult.textContent = "";
+          saveProgress();
+          updateProgressDisplay();
+        }, 1500);
+      }
+    });
+
+    // Mimic video watched tracking: increment on video click if logged in
+    const videoContainer = document.querySelector(".video-container");
+    videoContainer.addEventListener("click", () => {
+      if (!loggedIn) {
+        alert("Please login to watch videos.");
+        return;
+      }
+      videosWatched++;
+      saveProgress();
+      updateProgressDisplay();
+    });
+
+    // Scrollspy navigation highlight update
+    function updateNavHighlight() {
+      const scrollPosition = window.scrollY || window.pageYOffset;
+      const offsetThreshold = 150;
+
+      let currentSectionId = "home";
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - offsetThreshold;
+        const sectionHeight = section.offsetHeight;
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+          currentSectionId = section.id;
+        }
+      });
+
+      desktopNavLinks.forEach(link => {
+        if (link.getAttribute("href") === `#${currentSectionId}`) {
+          link.setAttribute("aria-current", "page");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+
+      mobileNavLinks.forEach(link => {
+        if (link.getAttribute("href") === `#${currentSectionId}`) {
+          link.classList.add("highlighted");
+          link.setAttribute("aria-current", "page");
+        } else {
+          link.classList.remove("highlighted");
+          link.removeAttribute("aria-current");
+        }
+      });
+    }
+
+    // Mobile menu toggle
+    mobileMenuButton.addEventListener("click", () => {
+      const expanded = mobileMenuButton.getAttribute("aria-expanded") === "true";
+      mobileMenuButton.setAttribute("aria-expanded", String(!expanded));
+      mobileNav.classList.toggle("open");
+      const links = mobileNav.querySelectorAll("a");
+      links.forEach(link => {
+        link.tabIndex = expanded ? -1 : 0;
+      });
+      if (!expanded) {
+        setTimeout(() => mobileNav.querySelector("a").focus(), 100);
+      }
+    });
+
+    // Close mobile menu on nav link click
+    mobileNav.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        mobileNav.classList.remove("open");
+        mobileMenuButton.setAttribute("aria-expanded", "false");
+        mobileNav.querySelectorAll("a").forEach(a => (a.tabIndex = -1));
+        mobileMenuButton.focus();
+      });
+    });
+
+    window.addEventListener("scroll", () => {
+      updateNavHighlight();
+    }, { passive: true });
+
+    // Initialize states and quiz
+    window.addEventListener("load", () => {
+      updateProgressDisplay();
+      if (loggedIn) {
+        updateLoginStatus("You are already logged in.");
+      }
+      updateNavHighlight();
+      startQuiz();
+    });
+  })();
+</script>
+
+</body>
+</html>
+
