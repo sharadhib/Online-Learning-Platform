@@ -47,3 +47,6 @@ The platform utilizes JavaScript to handle user interactions, such as form submi
 
 ### Conclusion
 The CodTech Online Learning Platform is a robust solution for anyone looking to enhance their learning experience through online education. With its combination of interactive features, responsive design, and accessibility considerations, it provides a comprehensive learning environment that caters to a diverse audience. Whether users are looking to watch video lessons, take quizzes, or track their progress, the platform offers a seamless and engaging experience that promotes effective learning. This project serves as a testament to the potential of web technologies in creating educational tools that are both functional and enjoyable to use.
+
+
+*OUTPUT*: <img width="909" alt="Image" src="https://github.com/user-attachments/assets/0d25ab8c-4981-4fe8-aebb-53f57f39ef86" />
